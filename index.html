@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="NOVA.EA — Tienda de ropa: pantalones, remeras, buzos, camperas, ropa de niño, accesorios, pijamas y vestidos." />
+  <title>NOVA.EA | Tienda de ropa</title>
+
+  <!-- Tipografía sans serif (con fuentes del sistema como respaldo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================
+       1. VARIABLES DE DISEÑO (paleta, tipografía, espaciados)
+       Cambiá estos valores para ajustar el estilo de toda la página.
+       ========================================================= */
+    :root {
+      /* Paleta: neutros cálidos + terracota como acento + verde salvia */
+      --color-fondo: #f8f4ef;        /* crema */
+      --color-superficie: #ffffff;   /* tarjetas */
+      --color-arena: #ece3d8;        /* fondos suaves */
+      --color-texto: #1f1d1b;        /* carbón */
+      --color-texto-suave: #6b645c;  /* gris cálido */
+      --color-acento: #c2714f;       /* terracota */
+      --color-acento-oscuro: #a35a3b;
+      --color-salvia: #8a9a83;       /* verde salvia */
+      --color-borde: #e2d9ce;
+
+      --fuente: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+      --radio: 14px;
+      --sombra: 0 6px 24px rgba(31, 29, 27, 0.08);
+      --sombra-hover: 0 14px 36px rgba(31, 29, 27, 0.14);
+      --ancho-max: 1200px;
+      --alto-header: 72px;
+      --transicion: 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+    /* =========================================================
+       2. RESET Y ESTILOS BASE
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; scroll-padding-top: var(--alto-header); }
+
+    body {
+      font-family: var(--fuente);
+      background: var(--color-fondo);
+      color: var(--color-texto);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+    .contenedor { width: 100%; max-width: var(--ancho-max); margin: 0 auto; padding: 0 20px; }
+
+    /* Botones reutilizables */
+    .btn {
+      display: inline-block;
+      padding: 14px 28px;
+      border-radius: 999px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: background var(--transicion), transform var(--transicion), color var(--transicion);
+    }
+    .btn-primario { background: var(--color-texto); color: #fff; }
+    .btn-primario:hover { background: var(--color-acento); transform: translateY(-2px); }
+    .btn-secundario { border: 1.5px solid var(--color-texto); }
+    .btn-secundario:hover { background: var(--color-texto); color: #fff; transform: translateY(-2px); }
+
+    /* Foco visible para navegación con teclado (accesibilidad) */
+    :focus-visible { outline: 2px solid var(--color-acento); outline-offset: 3px; }
+
+    /* =========================================================
+       3. ENCABEZADO Y NAVEGACIÓN
+       ========================================================= */
+    .header {
+      position: fixed; inset: 0 0 auto 0;
+      height: var(--alto-header);
+      z-index: 100;
+      background: rgba(248, 244, 239, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: box-shadow var(--transicion);
+    }
+    /* Se agrega con JS al hacer scroll */
+    .header.con-sombra { box-shadow: 0 2px 16px rgba(31, 29, 27, 0.08); }
+
+    .header .contenedor {
+      height: 100%;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+
+    .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.08em; }
+    .logo span { color: var(--color-acento); }
+
+    .nav ul { list-style: none; display: flex; gap: 22px; }
+    .nav a {
+      position: relative;
+      font-size: 0.92rem; font-weight: 500;
+      color: var(--color-texto-suave);
+      transition: color var(--transicion);
+    }
+    /* Subrayado animado */
+    .nav a::after {
+      content: ""; position: absolute; left: 0; bottom: -4px;
+      width: 100%; height: 2px; background: var(--color-acento);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform var(--transicion);
+    }
+    .nav a:hover, .nav a.activo { color: var(--color-texto); }
+    .nav a:hover::after, .nav a.activo::after { transform: scaleX(1); }
+
+    .acciones-header { display: flex; align-items: center; gap: 8px; }
+
+    /* Botón del carrito con contador */
+    .btn-carrito {
+      position: relative; width: 44px; height: 44px;
+      display: grid; place-items: center; border-radius: 50%;
+      transition: background var(--transicion);
+    }
+    .btn-carrito:hover { background: var(--color-arena); }
+    .btn-carrito svg { width: 22px; height: 22px; }
+    .contador-carrito {
+      position: absolute; top: 4px; right: 2px;
+      min-width: 18px; height: 18px; padding: 0 5px;
+      border-radius: 999px; background: var(--color-acento); color: #fff;
+      font-size: 0.7rem; font-weight: 700; display: grid; place-items: center;
+      transform: scale(0); transition: transform var(--transicion);
+    }
+    .contador-carrito.visible { transform: scale(1); }
+    .contador-carrito.rebote { animation: rebote 0.4s ease; }
+    @keyframes rebote { 50% { transform: scale(1.35); } }
+
+    /* Botón hamburguesa (solo móvil) */
+    .btn-menu { display: none; width: 44px; height: 44px; position: relative; }
+    .btn-menu span {
+      position: absolute; left: 11px; width: 22px; height: 2px;
+      background: var(--color-texto); border-radius: 2px;
+      transition: transform var(--transicion), opacity var(--transicion);
+    }
+    .btn-menu span:nth-child(1) { top: 15px; }
+    .btn-menu span:nth-child(2) { top: 21px; }
+    .btn-menu span:nth-child(3) { top: 27px; }
+    .btn-menu[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+    .btn-menu[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .btn-menu[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+    /* =========================================================
+       4. HERO (portada)
+       ========================================================= */
+    .hero {
+      min-height: 100vh;
+      padding-top: var(--alto-header);
+      display: flex; align-items: center;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(194, 113, 79, 0.18), transparent 45%),
+        radial-gradient(circle at 10% 90%, rgba(138, 154, 131, 0.22), transparent 45%),
+        var(--color-fondo);
+    }
+    .hero .contenedor {
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center;
+    }
+    .etiqueta {
+      display: inline-block; margin-bottom: 18px;
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--color-acento);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.4rem);
+      line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 22px;
+    }
+    .hero h1 em { font-style: normal; color: var(--color-acento); }
+    .hero p { font-size: 1.1rem; color: var(--color-texto-suave); max-width: 480px; margin-bottom: 34px; }
+    .hero-botones { display: flex; flex-wrap: wrap; gap: 14px; }
+
+    /* Composición visual del hero (bloques de color, se reemplazan por fotos más adelante) */
+    .hero-visual { position: relative; aspect-ratio: 4 / 5; }
+    .hero-visual .bloque {
+      position: absolute; border-radius: 24px; box-shadow: var(--sombra);
+      display: grid; place-items: center; color: rgba(255,255,255,0.9);
+      font-weight: 700; letter-spacing: 0.1em; overflow: hidden;
+    }
+    .hero-visual .bloque img { width: 100%; height: 100%; object-fit: cover; }
+    .bloque-1 { inset: 0 25% 20% 0; background: linear-gradient(160deg, #d79a7c, var(--color-acento)); }
+    .bloque-2 { inset: 45% 0 0 40%; background: linear-gradient(160deg, #a9b7a2, var(--color-salvia)); }
+    .bloque-1 { animation: flotar 6s ease-in-out infinite; }
+    .bloque-2 { animation: flotar 6s ease-in-out infinite reverse; }
+    @keyframes flotar { 50% { transform: translateY(-12px); } }
+
+    /* =========================================================
+       5. BARRA DE BENEFICIOS
+       ========================================================= */
+    .beneficios { background: var(--color-texto); color: #f3ece4; padding: 22px 0; }
+    .beneficios ul {
+      list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center;
+      font-size: 0.92rem;
+    }
+    .beneficios strong { color: #e9b79f; }
+
+    /* =========================================================
+       6. GRILLA DE CATEGORÍAS
+       ========================================================= */
+    .seccion { padding: 96px 0; }
+    .titulo-seccion { text-align: center; max-width: 620px; margin: 0 auto 52px; }
+    .titulo-seccion h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 12px; }
+    .titulo-seccion p { color: var(--color-texto-suave); }
+
+    .grilla-categorias {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+    }
+    .tarjeta-categoria {
+      position: relative; aspect-ratio: 3 / 4; border-radius: var(--radio); overflow: hidden;
+      display: flex; align-items: flex-end; padding: 20px;
+      color: #fff; box-shadow: var(--sombra);
+      transition: transform var(--transicion), box-shadow var(--transicion);
+    }
+    .tarjeta-categoria:hover { transform: translateY(-6px); box-shadow: var(--sombra-hover); }
+    .tarjeta-categoria .fondo {
+      position: absolute; inset: 0; background-size: cover; background-position: center;
+      transition: transform 0.6s ease;
+    }
+    .tarjeta-categoria:hover .fondo { transform: scale(1.06); }
+    /* Degradado inferior para que el texto se lea sobre las fotos */
+    .tarjeta-categoria::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(31,29,27,0.6), transparent 55%);
+    }
+    .tarjeta-categoria h3 { position: relative; z-index: 1; font-size: 1.2rem; }
+    .tarjeta-categoria small { display: block; font-weight: 400; opacity: 0.85; font-size: 0.82rem; }
+
+    /* =========================================================
+       7. SECCIONES DE PRODUCTOS
+       ========================================================= */
+    .seccion-productos:nth-of-type(even) { background: var(--color-arena); }
+
+    .encabezado-productos {
+      display: flex; justify-content: space-between; align-items: flex-end; gap: 20px;
+      margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .encabezado-productos h2 { font-size: clamp(1.7rem, 3.5vw, 2.3rem); letter-spacing: -0.01em; }
+    .encabezado-productos p { color: var(--color-texto-suave); max-width: 460px; }
+
+    .grilla-productos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+
+    .producto {
+      background: var(--color-superficie); border-radius: var(--radio); overflow: hidden;
+      box-shadow: var(--sombra); display: flex; flex-direction: column;
+      transition: transform var(--transicion), box-shadow var(--transicion);
+    }
+    .producto:hover { transform: translateY(-6px); box-shadow: var(--sombra-hover); }
+
+    .producto-imagen {
+      position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-arena);
+    }
+    .producto-imagen img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+    .producto:hover .producto-imagen img { transform: scale(1.06); }
+
+    /* Marcador de posición mientras no hay foto */
+    .placeholder {
+      width: 100%; height: 100%; display: grid; place-content: center; gap: 8px; text-align: center;
+      color: rgba(255,255,255,0.95); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+    }
+    .placeholder svg { width: 40px; height: 40px; margin: 0 auto; opacity: 0.85; }
+
+    .insignia {
+      position: absolute; top: 12px; left: 12px; z-index: 1;
+      background: var(--color-superficie); color: var(--color-texto);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 10px; border-radius: 999px;
+    }
+
+    .producto-info { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .producto-info h3 { font-size: 1rem; font-weight: 500; }
+    .precio { font-weight: 700; font-size: 1.05rem; }
+    .btn-agregar {
+      margin-top: auto; padding: 10px 14px; border-radius: 999px;
+      border: 1.5px solid var(--color-texto); font-size: 0.88rem; font-weight: 500;
+      transition: background var(--transicion), color var(--transicion), border-color var(--transicion);
+    }
+    .btn-agregar:hover { background: var(--color-texto); color: #fff; }
+    .btn-agregar.agregado { background: var(--color-salvia); border-color: var(--color-salvia); color: #fff; }
+
+    /* =========================================================
+       8. NEWSLETTER Y PIE DE PÁGINA
+       ========================================================= */
+    .newsletter {
+      background: var(--color-acento); color: #fff; border-radius: 24px;
+      padding: 56px 32px; text-align: center;
+    }
+    .newsletter h2 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); margin-bottom: 10px; }
+    .newsletter p { opacity: 0.9; margin-bottom: 26px; }
+    .form-newsletter { display: flex; gap: 10px; max-width: 460px; margin: 0 auto; }
+    .form-newsletter input {
+      flex: 1; min-width: 0; padding: 14px 20px; border-radius: 999px; border: none;
+      font: inherit; color: var(--color-texto);
+    }
+    .form-newsletter .btn-primario:hover { background: var(--color-acento-oscuro); }
+    .mensaje-form { margin-top: 14px; min-height: 1.5em; font-weight: 500; }
+
+    .footer { background: var(--color-texto); color: #cfc6bb; padding: 64px 0 28px; margin-top: 96px; }
+    .footer-grilla { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    .footer .logo { color: #fff; display: inline-block; margin-bottom: 12px; }
+    .footer h4 { color: #fff; margin-bottom: 14px; font-size: 0.95rem; }
+    .footer ul { list-style: none; display: grid; gap: 8px; font-size: 0.92rem; }
+    .footer a:hover { color: #fff; }
+    .footer-legal { border-top: 1px solid #3a3632; padding-top: 22px; font-size: 0.82rem; text-align: center; }
+
+    /* =========================================================
+       9. AVISO FLOTANTE (toast) Y BOTÓN "VOLVER ARRIBA"
+       ========================================================= */
+    .toast {
+      position: fixed; left: 50%; bottom: 24px; z-index: 200;
+      transform: translate(-50%, calc(100% + 40px));
+      background: var(--color-texto); color: #fff; padding: 12px 22px; border-radius: 999px;
+      font-size: 0.92rem; box-shadow: var(--sombra-hover);
+      transition: transform var(--transicion);
+    }
+    .toast.visible { transform: translate(-50%, 0); }
+
+    .btn-arriba {
+      position: fixed; right: 20px; bottom: 20px; z-index: 90;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--color-superficie); box-shadow: var(--sombra);
+      display: grid; place-items: center;
+      opacity: 0; pointer-events: none; transform: translateY(10px);
+      transition: opacity var(--transicion), transform var(--transicion);
+    }
+    .btn-arriba.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .btn-arriba svg { width: 20px; height: 20px; }
+
+    /* =========================================================
+       10. ANIMACIONES AL HACER SCROLL
+       Los elementos con la clase .revelar aparecen suavemente
+       cuando entran en pantalla (lo controla JavaScript).
+       ========================================================= */
+    .revelar {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+      transition-delay: var(--retraso, 0s);
+    }
+    .revelar.visible { opacity: 1; transform: none; }
+
+    /* Respeta a quienes prefieren menos movimiento */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .revelar { opacity: 1; transform: none; }
+    }
+
+    /* =========================================================
+       11. RESPONSIVE
+       ========================================================= */
+    @media (max-width: 1024px) {
+      .nav ul { gap: 14px; }
+      .nav a { font-size: 0.85rem; }
+      .grilla-productos { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+      /* Menú desplegable en móvil */
+      .btn-menu { display: block; }
+      .nav {
+        position: fixed; top: var(--alto-header); left: 0; right: 0;
+        background: var(--color-fondo); box-shadow: 0 12px 24px rgba(31,29,27,0.1);
+        max-height: 0; overflow: hidden; transition: max-height var(--transicion);
+      }
+      .nav.abierto { max-height: 480px; }
+      .nav ul { flex-direction: column; gap: 0; padding: 8px 20px 20px; }
+      .nav a { display: block; padding: 12px 0; font-size: 1rem; border-bottom: 1px solid var(--color-borde); }
+      .nav a::after { display: none; }
+
+      .hero .contenedor { grid-template-columns: 1fr; text-align: center; }
+      .hero p { margin-left: auto; margin-right: auto; }
+      .hero-botones { justify-content: center; }
+      .hero-visual { max-width: 360px; width: 100%; margin: 0 auto; }
+
+      .grilla-categorias { grid-template-columns: repeat(2, 1fr); }
+      .footer-grilla { grid-template-columns: 1fr 1fr; }
+      .footer-grilla > div:first-child { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 640px) {
+      .seccion { padding: 72px 0; }
+      .beneficios ul { grid-template-columns: 1fr; gap: 6px; }
+      .grilla-productos { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .placeholder { font-size: 0.66rem; letter-spacing: 0.06em; padding: 0 8px; }
+      .producto-info { padding: 12px; }
+      .producto-info h3 { font-size: 0.9rem; }
+      .btn-agregar { font-size: 0.78rem; padding: 9px 6px; }
+      .form-newsletter { flex-direction: column; }
+      .newsletter { padding: 44px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================= ENCABEZADO ================= -->
+  <header class="header" id="header">
+    <div class="contenedor">
+      <a href="#inicio" class="logo" aria-label="NOVA.EA, ir al inicio">NOVA<span>.</span>EA</a>
+
+      <!-- Los enlaces del menú se generan con JavaScript a partir de la lista de categorías -->
+      <nav class="nav" id="nav" aria-label="Secciones de la tienda">
+        <ul id="lista-nav"></ul>
+      </nav>
+
+      <div class="acciones-header">
+        <button class="btn-carrito" id="btn-carrito" aria-label="Carrito de compras">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 7h12l-1 13H7L6 7z" /><path d="M9 7a3 3 0 0 1 6 0" />
+          </svg>
+          <span class="contador-carrito" id="contador-carrito">0</span>
+        </button>
+        <button class="btn-menu" id="btn-menu" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ================= HERO ================= -->
+    <section class="hero" id="inicio">
+      <div class="contenedor">
+        <div>
+          <span class="etiqueta revelar">Nueva temporada</span>
+          <h1 class="revelar" style="--retraso: 0.1s">Ropa que te acompaña <em>todos los días</em>.</h1>
+          <p class="revelar" style="--retraso: 0.2s">
+            En NOVA.EA elegimos prendas cómodas, de buena calidad y con estilo, para vos y para toda la familia.
+          </p>
+          <div class="hero-botones revelar" style="--retraso: 0.3s">
+            <a href="#categorias" class="btn btn-primario">Ver colección</a>
+            <a href="#contacto" class="btn btn-secundario">Novedades</a>
+          </div>
+        </div>
+        <div class="hero-visual revelar" style="--retraso: 0.2s" aria-hidden="true">
+          <!-- Reemplazar el contenido de estos bloques por <img> cuando estén las fotos -->
+          <div class="bloque bloque-1">NOVA</div>
+          <div class="bloque bloque-2">.EA</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BENEFICIOS ================= -->
+    <section class="beneficios" aria-label="Beneficios">
+      <div class="contenedor">
+        <ul>
+          <li><strong>Envíos</strong> a todo el país</li>
+          <li><strong>Cambios</strong> sin complicaciones</li>
+          <li><strong>Cuotas</strong> con todas las tarjetas</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ================= CATEGORÍAS ================= -->
+    <section class="seccion" id="categorias">
+      <div class="contenedor">
+        <div class="titulo-seccion revelar">
+          <span class="etiqueta">Categorías</span>
+          <h2>Encontrá lo que buscás</h2>
+          <p>Explorá nuestras secciones y descubrí prendas pensadas para cada momento.</p>
+        </div>
+        <!-- Se completa con JavaScript -->
+        <div class="grilla-categorias" id="grilla-categorias"></div>
+      </div>
+    </section>
+
+    <!-- ================= SECCIONES DE PRODUCTOS ================= -->
+    <!-- Cada sección (Pantalones, Remeras, etc.) se genera con JavaScript -->
+    <div id="secciones-productos"></div>
+
+    <!-- ================= NEWSLETTER ================= -->
+    <section class="seccion" id="contacto">
+      <div class="contenedor">
+        <div class="newsletter revelar">
+          <h2>Sumate a la comunidad NOVA.EA</h2>
+          <p>Recibí novedades, lanzamientos y descuentos exclusivos en tu correo.</p>
+          <form class="form-newsletter" id="form-newsletter" novalidate>
+            <label for="email" class="sr-only" hidden>Correo electrónico</label>
+            <input type="email" id="email" placeholder="tu@email.com" autocomplete="email" required />
+            <button type="submit" class="btn btn-primario">Suscribirme</button>
+          </form>
+          <p class="mensaje-form" id="mensaje-form" aria-live="polite"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= PIE DE PÁGINA ================= -->
+  <footer class="footer">
+    <div class="contenedor">
+      <div class="footer-grilla">
+        <div>
+          <a href="#inicio" class="logo">NOVA<span>.</span>EA</a>
+          <p>Ropa con estilo y comodidad para toda la familia.</p>
+        </div>
+        <div>
+          <h4>Secciones</h4>
+          <ul id="lista-footer"></ul>
+        </div>
+        <div>
+          <h4>Ayuda</h4>
+          <ul>
+            <li><a href="#contacto">Contacto</a></li>
+            <li><a href="#contacto">Envíos y cambios</a></li>
+            <li><a href="#contacto">Guía de talles</a></li>
+            <li><a href="#contacto">Instagram</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-legal">© <span id="anio"></span> NOVA.EA — Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Aviso flotante y botón para volver arriba -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <button class="btn-arriba" id="btn-arriba" aria-label="Volver arriba">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  </button>
+
+  <script>
+    /* =========================================================
+       DATOS DE LA TIENDA
+       ---------------------------------------------------------
+       Para agregar fotos: completá el campo "imagen" con la ruta
+       del archivo (por ejemplo: "img/pantalones/jean-recto.jpg").
+       - "portada" es la foto de la tarjeta de categoría.
+       - "imagen" en cada producto es la foto de ese producto.
+       Si el campo está vacío se muestra un fondo de color.
+       ========================================================= */
+    const CATEGORIAS = [
+      {
+        id: 'pantalones', nombre: 'Pantalones', descripcion: 'Jeans, joggers y cortes clásicos para todos los días.',
+        color: ['#7d8ea3', '#5d6f86'], portada: '',
+        productos: [
+          { nombre: 'Jean recto clásico', precio: 32900, imagen: '', insignia: 'Nuevo' },
+          { nombre: 'Jogger de algodón', precio: 24500, imagen: '' },
+          { nombre: 'Pantalón cargo', precio: 29900, imagen: '' },
+          { nombre: 'Pantalón de vestir', precio: 35900, imagen: '' }
+        ]
+      },
+      {
+        id: 'remeras', nombre: 'Remeras', descripcion: 'Básicas, estampadas y oversize en algodón suave.',
+        color: ['#e0b48f', '#c99068'], portada: '',
+        productos: [
+          { nombre: 'Remera básica', precio: 12900, imagen: '' },
+          { nombre: 'Remera oversize', precio: 15900, imagen: '', insignia: 'Top' },
+          { nombre: 'Remera estampada', precio: 14500, imagen: '' },
+          { nombre: 'Musculosa rib', precio: 11900, imagen: '' }
+        ]
+      },
+      {
+        id: 'buzos', nombre: 'Buzos', descripcion: 'Abrigados y cómodos, con y sin capucha.',
+        color: ['#a9b7a2', '#8a9a83'], portada: '',
+        productos: [
+          { nombre: 'Buzo con capucha', precio: 34900, imagen: '', insignia: 'Nuevo' },
+          { nombre: 'Buzo cuello redondo', precio: 29900, imagen: '' },
+          { nombre: 'Buzo media cremallera', precio: 36500, imagen: '' },
+          { nombre: 'Buzo oversize', precio: 33900, imagen: '' }
+        ]
+      },
+      {
+        id: 'camperas', nombre: 'Camperas', descripcion: 'Para el frío, la lluvia o la media estación.',
+        color: ['#8c7b6b', '#6b5d50'], portada: '',
+        productos: [
+          { nombre: 'Campera puffer', precio: 64900, imagen: '', insignia: 'Top' },
+          { nombre: 'Campera de jean', precio: 49900, imagen: '' },
+          { nombre: 'Rompevientos', precio: 42500, imagen: '' },
+          { nombre: 'Campera de cuero eco', precio: 69900, imagen: '' }
+        ]
+      },
+      {
+        id: 'ninos', nombre: 'Ropa de niño', descripcion: 'Prendas resistentes y divertidas para los más chicos.',
+        color: ['#e6c27a', '#d4a64e'], portada: '',
+        productos: [
+          { nombre: 'Conjunto deportivo', precio: 27900, imagen: '', insignia: 'Nuevo' },
+          { nombre: 'Remera infantil', precio: 9900, imagen: '' },
+          { nombre: 'Jean infantil', precio: 19900, imagen: '' },
+          { nombre: 'Buzo infantil', precio: 21500, imagen: '' }
+        ]
+      },
+      {
+        id: 'accesorios', nombre: 'Accesorios', descripcion: 'El detalle que completa tu look.',
+        color: ['#c2714f', '#a35a3b'], portada: '',
+        productos: [
+          { nombre: 'Gorra bordada', precio: 11900, imagen: '' },
+          { nombre: 'Bufanda tejida', precio: 13900, imagen: '' },
+          { nombre: 'Tote bag', precio: 9500, imagen: '', insignia: 'Top' },
+          { nombre: 'Cinturón de cuero', precio: 15900, imagen: '' }
+        ]
+      },
+      {
+        id: 'pijamas', nombre: 'Pijamas', descripcion: 'Suaves y livianos para descansar mejor.',
+        color: ['#b6a6c9', '#9584ad'], portada: '',
+        productos: [
+          { nombre: 'Pijama de algodón', precio: 26900, imagen: '' },
+          { nombre: 'Pijama polar', precio: 31900, imagen: '', insignia: 'Nuevo' },
+          { nombre: 'Short de dormir', precio: 12500, imagen: '' },
+          { nombre: 'Bata de toalla', precio: 34900, imagen: '' }
+        ]
+      },
+      {
+        id: 'vestidos', nombre: 'Vestidos', descripcion: 'Desde lo casual hasta lo especial.',
+        color: ['#d99a9a', '#bf7a7a'], portada: '',
+        productos: [
+          { nombre: 'Vestido midi', precio: 39900, imagen: '', insignia: 'Top' },
+          { nombre: 'Vestido camisero', precio: 36900, imagen: '' },
+          { nombre: 'Vestido de lino', precio: 42900, imagen: '' },
+          { nombre: 'Vestido largo', precio: 45900, imagen: '' }
+        ]
+      }
+    ];
+
+    /* =========================================================
+       UTILIDADES
+       ========================================================= */
+
+    // Formatea precios en pesos argentinos: 32900 -> "$ 32.900"
+    const formatoPrecio = new Intl.NumberFormat('es-AR', {
+      style: 'currency', currency: 'ARS', maximumFractionDigits: 0
+    });
+
+    // Ícono de percha usado en los marcadores de posición
+    const ICONO_PERCHA = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 7a2 2 0 1 1 2-2" /><path d="M12 7v2L3 16h18l-9-7" />
+      </svg>`;
+
+    // Devuelve una <img> si hay foto, o un fondo de color si todavía no hay
+    function crearImagen(src, alt, colores) {
+      if (src) {
+        return `<img src="${src}" alt="${alt}" loading="lazy" />`;
+      }
+      return `
+        <div class="placeholder" style="background: linear-gradient(160deg, ${colores[0]}, ${colores[1]})">
+          ${ICONO_PERCHA}<span>Foto próximamente</span>
+        </div>`;
+    }
+
+    /* =========================================================
+       RENDERIZADO DE LA PÁGINA
+       ========================================================= */
+
+    // 1. Menú de navegación y enlaces del pie de página
+    function renderizarNavegacion() {
+      const enlaces = CATEGORIAS
+        .map(cat => `<li><a href="#${cat.id}" data-seccion="${cat.id}">${cat.nombre}</a></li>`)
+        .join('');
+      document.getElementById('lista-nav').innerHTML = enlaces;
+      document.getElementById('lista-footer').innerHTML = enlaces;
+    }
+
+    // 2. Tarjetas de la grilla de categorías
+    function renderizarCategorias() {
+      document.getElementById('grilla-categorias').innerHTML = CATEGORIAS.map((cat, i) => {
+        const fondo = cat.portada
+          ? `background-image: url('${cat.portada}')`
+          : `background: linear-gradient(160deg, ${cat.color[0]}, ${cat.color[1]})`;
+        return `
+          <a href="#${cat.id}" class="tarjeta-categoria revelar" style="--retraso: ${(i % 4) * 0.08}s">
+            <div class="fondo" style="${fondo}"></div>
+            <h3>${cat.nombre}<small>${cat.productos.length} productos</small></h3>
+          </a>`;
+      }).join('');
+    }
+
+    // 3. Una sección completa por cada categoría, con sus productos
+    function renderizarSecciones() {
+      document.getElementById('secciones-productos').innerHTML = CATEGORIAS.map(cat => `
+        <section class="seccion seccion-productos" id="${cat.id}">
+          <div class="contenedor">
+            <div class="encabezado-productos revelar">
+              <div>
+                <span class="etiqueta">Colección</span>
+                <h2>${cat.nombre}</h2>
+              </div>
+              <p>${cat.descripcion}</p>
+            </div>
+            <div class="grilla-productos">
+              ${cat.productos.map((prod, i) => `
+                <article class="producto revelar" style="--retraso: ${i * 0.08}s">
+                  <div class="producto-imagen">
+                    ${prod.insignia ? `<span class="insignia">${prod.insignia}</span>` : ''}
+                    ${crearImagen(prod.imagen, prod.nombre, cat.color)}
+                  </div>
+                  <div class="producto-info">
+                    <h3>${prod.nombre}</h3>
+                    <span class="precio">${formatoPrecio.format(prod.precio)}</span>
+                    <button class="btn-agregar" data-nombre="${prod.nombre}">Agregar al carrito</button>
+                  </div>
+                </article>`).join('')}
+            </div>
+          </div>
+        </section>`).join('');
+    }
+
+    /* =========================================================
+       INTERACCIONES
+       ========================================================= */
+
+    // Menú hamburguesa (móvil)
+    function iniciarMenu() {
+      const btnMenu = document.getElementById('btn-menu');
+      const nav = document.getElementById('nav');
+
+      const cerrarMenu = () => {
+        nav.classList.remove('abierto');
+        btnMenu.setAttribute('aria-expanded', 'false');
+        btnMenu.setAttribute('aria-label', 'Abrir menú');
+      };
+
+      btnMenu.addEventListener('click', () => {
+        const abierto = nav.classList.toggle('abierto');
+        btnMenu.setAttribute('aria-expanded', String(abierto));
+        btnMenu.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+      });
+
+      // Cierra el menú al elegir una sección
+      nav.addEventListener('click', e => { if (e.target.closest('a')) cerrarMenu(); });
+      // Cierra el menú con la tecla Escape
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarMenu(); });
+    }
+
+    // Aviso flotante (toast)
+    let temporizadorToast;
+    function mostrarToast(texto) {
+      const toast = document.getElementById('toast');
+      toast.textContent = texto;
+      toast.classList.add('visible');
+      clearTimeout(temporizadorToast);
+      temporizadorToast = setTimeout(() => toast.classList.remove('visible'), 2400);
+    }
+
+    // Carrito simple: cuenta productos agregados
+    function iniciarCarrito() {
+      let cantidad = 0;
+      const contador = document.getElementById('contador-carrito');
+
+      // Delegación de eventos: un solo listener para todos los botones "Agregar"
+      document.getElementById('secciones-productos').addEventListener('click', e => {
+        const boton = e.target.closest('.btn-agregar');
+        if (!boton) return;
+
+        cantidad++;
+        contador.textContent = cantidad;
+        contador.classList.add('visible');
+
+        // Reinicia la animación de rebote del contador
+        contador.classList.remove('rebote');
+        void contador.offsetWidth;
+        contador.classList.add('rebote');
+
+        // Feedback visual en el botón
+        boton.textContent = '✓ Agregado';
+        boton.classList.add('agregado');
+        setTimeout(() => {
+          boton.textContent = 'Agregar al carrito';
+          boton.classList.remove('agregado');
+        }, 1500);
+
+        mostrarToast(`"${boton.dataset.nombre}" se agregó al carrito`);
+      });
+
+      document.getElementById('btn-carrito').addEventListener('click', () => {
+        mostrarToast(cantidad === 0
+          ? 'Tu carrito está vacío'
+          : `Tenés ${cantidad} ${cantidad === 1 ? 'producto' : 'productos'} en el carrito`);
+      });
+    }
+
+    // Animaciones al hacer scroll: revela elementos al entrar en pantalla
+    function iniciarAnimacionesScroll() {
+      const elementos = document.querySelectorAll('.revelar');
+
+      // Si el navegador no soporta IntersectionObserver, se muestra todo directamente
+      if (!('IntersectionObserver' in window)) {
+        elementos.forEach(el => el.classList.add('visible'));
+        return;
+      }
+
+      const observador = new IntersectionObserver((entradas, obs) => {
+        entradas.forEach(entrada => {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add('visible');
+            obs.unobserve(entrada.target); // se anima una sola vez
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+      elementos.forEach(el => observador.observe(el));
+    }
+
+    // Resalta en el menú la sección que se está viendo
+    function iniciarSeccionActiva() {
+      if (!('IntersectionObserver' in window)) return;
+      const enlaces = document.querySelectorAll('#lista-nav a');
+
+      const observador = new IntersectionObserver(entradas => {
+        entradas.forEach(entrada => {
+          if (!entrada.isIntersecting) return;
+          enlaces.forEach(a => a.classList.toggle('activo', a.dataset.seccion === entrada.target.id));
+        });
+      }, { rootMargin: '-45% 0px -50% 0px' });
+
+      document.querySelectorAll('.seccion-productos').forEach(sec => observador.observe(sec));
+    }
+
+    // Sombra del header y botón "volver arriba" según el scroll
+    function iniciarEfectosScroll() {
+      const header = document.getElementById('header');
+      const btnArriba = document.getElementById('btn-arriba');
+
+      const actualizar = () => {
+        const y = window.scrollY;
+        header.classList.toggle('con-sombra', y > 10);
+        btnArriba.classList.toggle('visible', y > 600);
+      };
+
+      window.addEventListener('scroll', actualizar, { passive: true });
+      btnArriba.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      actualizar();
+    }
+
+    // Formulario de newsletter con validación simple
+    function iniciarNewsletter() {
+      const form = document.getElementById('form-newsletter');
+      const input = document.getElementById('email');
+      const mensaje = document.getElementById('mensaje-form');
+
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        if (!input.checkValidity() || !input.value.trim()) {
+          mensaje.textContent = 'Ingresá un correo electrónico válido.';
+          return;
+        }
+        mensaje.textContent = '¡Gracias por suscribirte! Pronto vas a recibir novedades.';
+        form.reset();
+      });
+    }
+
+    /* =========================================================
+       INICIO
+       ========================================================= */
+    document.addEventListener('DOMContentLoaded', () => {
+      renderizarNavegacion();
+      renderizarCategorias();
+      renderizarSecciones();
+
+      iniciarMenu();
+      iniciarCarrito();
+      iniciarAnimacionesScroll();
+      iniciarSeccionActiva();
+      iniciarEfectosScroll();
+      iniciarNewsletter();
+
+      document.getElementById('anio').textContent = new Date().getFullYear();
+    });
+  </script>
+</body>
+</html>
