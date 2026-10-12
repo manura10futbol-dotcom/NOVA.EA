@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="NOVA.EA — Tienda de ropa: pantalones, remeras, buzos, camperas, ropa de niño, accesorios, pijamas y vestidos." />
+  <meta name="description" content="NOVA.EA — Tienda de ropa: pantalones, remeras, buzos, camperas, ropa de deporte, ropa de niño, accesorios, pijamas y vestidos." />
   <title>NOVA.EA | Tienda de ropa</title>
 
   <!-- Tipografía sans serif (con fuentes del sistema como respaldo) -->
@@ -211,11 +211,12 @@
     .titulo-seccion h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 12px; }
     .titulo-seccion p { color: var(--color-texto-suave); }
 
+    /* 9 categorías: 3 columnas en escritorio */
     .grilla-categorias {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
     }
     .tarjeta-categoria {
-      position: relative; aspect-ratio: 3 / 4; border-radius: var(--radio); overflow: hidden;
+      position: relative; aspect-ratio: 4 / 3; border-radius: var(--radio); overflow: hidden;
       display: flex; align-items: flex-end; padding: 20px;
       color: #fff; box-shadow: var(--sombra);
       transition: transform var(--transicion), box-shadow var(--transicion);
@@ -370,7 +371,7 @@
         background: var(--color-fondo); box-shadow: 0 12px 24px rgba(31,29,27,0.1);
         max-height: 0; overflow: hidden; transition: max-height var(--transicion);
       }
-      .nav.abierto { max-height: 480px; }
+      .nav.abierto { max-height: 640px; }
       .nav ul { flex-direction: column; gap: 0; padding: 8px 20px 20px; }
       .nav a { display: block; padding: 12px 0; font-size: 1rem; border-bottom: 1px solid var(--color-borde); }
       .nav a::after { display: none; }
@@ -381,6 +382,9 @@
       .hero-visual { max-width: 360px; width: 100%; margin: 0 auto; }
 
       .grilla-categorias { grid-template-columns: repeat(2, 1fr); }
+      .tarjeta-categoria { aspect-ratio: 3 / 4; }
+      /* Si queda una tarjeta sola en la última fila, ocupa todo el ancho */
+      .tarjeta-categoria:last-child:nth-child(odd) { grid-column: 1 / -1; aspect-ratio: 3 / 2; }
       .footer-grilla { grid-template-columns: 1fr 1fr; }
       .footer-grilla > div:first-child { grid-column: 1 / -1; }
     }
@@ -578,6 +582,16 @@
         ]
       },
       {
+        id: 'deporte', nombre: 'Ropa de deporte', descripcion: 'Prendas livianas y respirables para entrenar con comodidad.',
+        color: ['#6fa3a0', '#4f8582'], portada: '',
+        productos: [
+          { nombre: 'Calza deportiva', precio: 22900, imagen: '', insignia: 'Nuevo' },
+          { nombre: 'Remera dry-fit', precio: 16900, imagen: '' },
+          { nombre: 'Short de running', precio: 15500, imagen: '' },
+          { nombre: 'Campera deportiva', precio: 44900, imagen: '', insignia: 'Top' }
+        ]
+      },
+      {
         id: 'ninos', nombre: 'Ropa de niño', descripcion: 'Prendas resistentes y divertidas para los más chicos.',
         color: ['#e6c27a', '#d4a64e'], portada: '',
         productos: [
@@ -665,7 +679,7 @@
           ? `background-image: url('${cat.portada}')`
           : `background: linear-gradient(160deg, ${cat.color[0]}, ${cat.color[1]})`;
         return `
-          <a href="#${cat.id}" class="tarjeta-categoria revelar" style="--retraso: ${(i % 4) * 0.08}s">
+          <a href="#${cat.id}" class="tarjeta-categoria revelar" style="--retraso: ${(i % 3) * 0.08}s">
             <div class="fondo" style="${fondo}"></div>
             <h3>${cat.nombre}<small>${cat.productos.length} productos</small></h3>
           </a>`;
