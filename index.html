@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="NOVA.EA — Tienda de ropa: pantalones, remeras, buzos, camperas, ropa de deporte, ropa de niño, accesorios, pijamas y vestidos." />
+  <meta name="description" content="NOVA.EA — Tienda de ropa: pantalones, remeras, buzos, camperas, ropa de deporte, ropa de niño, accesorios, pijamas, vestidos y ropa interior." />
   <title>NOVA.EA | Tienda de ropa</title>
 
   <!-- Tipografía sans serif (con fuentes del sistema como respaldo) -->
@@ -27,6 +27,7 @@
       --color-acento-oscuro: #a35a3b;
       --color-salvia: #8a9a83;       /* verde salvia */
       --color-borde: #e2d9ce;
+      --color-foto: #f3efe9;         /* fondo de las fotos de producto */
 
       --fuente: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 
@@ -54,6 +55,7 @@
     }
 
     img { max-width: 100%; display: block; }
+    [hidden] { display: none !important; }
     a { color: inherit; text-decoration: none; }
     button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
 
@@ -179,16 +181,15 @@
     .hero p { font-size: 1.1rem; color: var(--color-texto-suave); max-width: 480px; margin-bottom: 34px; }
     .hero-botones { display: flex; flex-wrap: wrap; gap: 14px; }
 
-    /* Composición visual del hero (bloques de color, se reemplazan por fotos más adelante) */
-    .hero-visual { position: relative; aspect-ratio: 4 / 5; }
+    /* Composición visual del hero: dos fotos de producto superpuestas */
+    .hero-visual { position: relative; aspect-ratio: 4 / 5; max-width: 100%; }
     .hero-visual .bloque {
-      position: absolute; border-radius: 24px; box-shadow: var(--sombra);
-      display: grid; place-items: center; color: rgba(255,255,255,0.9);
-      font-weight: 700; letter-spacing: 0.1em; overflow: hidden;
+      position: absolute; border-radius: 24px; box-shadow: var(--sombra-hover);
+      overflow: hidden; background: var(--color-foto);
     }
     .hero-visual .bloque img { width: 100%; height: 100%; object-fit: cover; }
-    .bloque-1 { inset: 0 25% 20% 0; background: linear-gradient(160deg, #d79a7c, var(--color-acento)); }
-    .bloque-2 { inset: 45% 0 0 40%; background: linear-gradient(160deg, #a9b7a2, var(--color-salvia)); }
+    .bloque-1 { inset: 0 25% 20% 0; }
+    .bloque-2 { inset: 45% 0 0 40%; border: 6px solid var(--color-fondo); }
     .bloque-1 { animation: flotar 6s ease-in-out infinite; }
     .bloque-2 { animation: flotar 6s ease-in-out infinite reverse; }
     @keyframes flotar { 50% { transform: translateY(-12px); } }
@@ -211,26 +212,26 @@
     .titulo-seccion h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.01em; line-height: 1.15; margin-bottom: 12px; }
     .titulo-seccion p { color: var(--color-texto-suave); }
 
-    /* 9 categorías: 3 columnas en escritorio */
+    /* 10 categorías: 5 columnas en escritorio */
     .grilla-categorias {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px;
     }
     .tarjeta-categoria {
-      position: relative; aspect-ratio: 4 / 3; border-radius: var(--radio); overflow: hidden;
+      position: relative; aspect-ratio: 3 / 4; background: var(--color-foto); border-radius: var(--radio); overflow: hidden;
       display: flex; align-items: flex-end; padding: 20px;
       color: #fff; box-shadow: var(--sombra);
       transition: transform var(--transicion), box-shadow var(--transicion);
     }
     .tarjeta-categoria:hover { transform: translateY(-6px); box-shadow: var(--sombra-hover); }
     .tarjeta-categoria .fondo {
-      position: absolute; inset: 0; background-size: cover; background-position: center;
+      position: absolute; inset: 0 0 18% 0; background-size: cover; background-position: center;
       transition: transform 0.6s ease;
     }
     .tarjeta-categoria:hover .fondo { transform: scale(1.06); }
     /* Degradado inferior para que el texto se lea sobre las fotos */
     .tarjeta-categoria::after {
       content: ""; position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(31,29,27,0.6), transparent 55%);
+      background: linear-gradient(to top, rgba(31,29,27,0.78), rgba(31,29,27,0.15) 45%, transparent 60%);
     }
     .tarjeta-categoria h3 { position: relative; z-index: 1; font-size: 1.2rem; }
     .tarjeta-categoria small { display: block; font-weight: 400; opacity: 0.85; font-size: 0.82rem; }
@@ -256,11 +257,25 @@
     }
     .producto:hover { transform: translateY(-6px); box-shadow: var(--sombra-hover); }
 
+    /* La imagen es un botón: al tocarla se abre la galería con todos los ángulos */
     .producto-imagen {
-      position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--color-arena);
+      position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; overflow: hidden;
+      background: var(--color-foto); cursor: zoom-in;
     }
-    .producto-imagen img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
-    .producto:hover .producto-imagen img { transform: scale(1.06); }
+    .producto-imagen img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s ease, opacity 0.5s ease;
+    }
+    .producto:hover .producto-imagen img { transform: scale(1.04); }
+    /* Si hay una segunda foto, aparece al pasar el mouse */
+    .producto-imagen .img-alternativa { opacity: 0; }
+    .producto:hover .producto-imagen .img-alternativa { opacity: 1; }
+
+    .cantidad-fotos {
+      position: absolute; right: 12px; bottom: 12px; z-index: 1;
+      background: rgba(31, 29, 27, 0.75); color: #fff;
+      font-size: 0.72rem; font-weight: 500; padding: 4px 9px; border-radius: 999px;
+    }
 
     /* Marcador de posición mientras no hay foto */
     .placeholder {
@@ -336,6 +351,51 @@
     .btn-arriba svg { width: 20px; height: 20px; }
 
     /* =========================================================
+       9b. GALERÍA DE FOTOS (todos los ángulos de un producto)
+       ========================================================= */
+    .galeria {
+      position: fixed; inset: 0; z-index: 300;
+      display: grid; place-items: center; padding: 20px;
+      background: rgba(31, 29, 27, 0.7);
+      opacity: 0; pointer-events: none; transition: opacity var(--transicion);
+    }
+    .galeria.abierta { opacity: 1; pointer-events: auto; }
+    .galeria-caja {
+      position: relative; width: min(920px, 100%); max-height: calc(100vh - 40px);
+      background: var(--color-superficie); border-radius: 20px; overflow: auto;
+      display: grid; grid-template-columns: 1.2fr 1fr;
+      transform: translateY(20px); transition: transform var(--transicion);
+    }
+    .galeria.abierta .galeria-caja { transform: none; }
+    .galeria-principal { position: relative; background: var(--color-foto); aspect-ratio: 4 / 5; }
+    .galeria-principal img { width: 100%; height: 100%; object-fit: contain; }
+    .galeria-flecha {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 42px; height: 42px; border-radius: 50%;
+      background: var(--color-superficie); box-shadow: var(--sombra);
+      font-size: 1.3rem; display: grid; place-items: center;
+    }
+    .galeria-flecha.anterior { left: 12px; }
+    .galeria-flecha.siguiente { right: 12px; }
+    .galeria-info { padding: 32px 28px; display: flex; flex-direction: column; gap: 14px; }
+    .galeria-info h3 { font-size: 1.4rem; line-height: 1.2; padding-right: 40px; }
+    .galeria-info .precio { font-size: 1.3rem; }
+    .galeria-miniaturas { display: flex; flex-wrap: wrap; gap: 8px; }
+    .galeria-miniaturas button {
+      width: 64px; aspect-ratio: 4 / 5; border-radius: 8px; overflow: hidden;
+      background: var(--color-foto); border: 2px solid transparent;
+    }
+    .galeria-miniaturas button.activa { border-color: var(--color-acento); }
+    .galeria-miniaturas img { width: 100%; height: 100%; object-fit: cover; }
+    .galeria-info .btn-agregar { margin-top: 8px; padding: 13px 18px; }
+    .galeria-cerrar {
+      position: absolute; top: 12px; right: 12px; z-index: 2;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--color-superficie); box-shadow: var(--sombra); font-size: 1.4rem; line-height: 1;
+    }
+    body.sin-scroll { overflow: hidden; }
+
+    /* =========================================================
        10. ANIMACIONES AL HACER SCROLL
        Los elementos con la clase .revelar aparecen suavemente
        cuando entran en pantalla (lo controla JavaScript).
@@ -357,14 +417,8 @@
     /* =========================================================
        11. RESPONSIVE
        ========================================================= */
-    @media (max-width: 1024px) {
-      .nav ul { gap: 14px; }
-      .nav a { font-size: 0.85rem; }
-      .grilla-productos { grid-template-columns: repeat(3, 1fr); }
-    }
-
-    @media (max-width: 900px) {
-      /* Menú desplegable en móvil */
+    @media (max-width: 1180px) {
+      /* Menú desplegable: con 10 secciones no entra en una sola línea */
       .btn-menu { display: block; }
       .nav {
         position: fixed; top: var(--alto-header); left: 0; right: 0;
@@ -375,16 +429,22 @@
       .nav ul { flex-direction: column; gap: 0; padding: 8px 20px 20px; }
       .nav a { display: block; padding: 12px 0; font-size: 1rem; border-bottom: 1px solid var(--color-borde); }
       .nav a::after { display: none; }
+    }
 
+    @media (max-width: 1024px) {
+      .grilla-productos { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 900px) {
       .hero .contenedor { grid-template-columns: 1fr; text-align: center; }
       .hero p { margin-left: auto; margin-right: auto; }
       .hero-botones { justify-content: center; }
       .hero-visual { max-width: 360px; width: 100%; margin: 0 auto; }
 
       .grilla-categorias { grid-template-columns: repeat(2, 1fr); }
-      .tarjeta-categoria { aspect-ratio: 3 / 4; }
-      /* Si queda una tarjeta sola en la última fila, ocupa todo el ancho */
-      .tarjeta-categoria:last-child:nth-child(odd) { grid-column: 1 / -1; aspect-ratio: 3 / 2; }
+      .galeria-caja { grid-template-columns: 1fr; }
+      .galeria-principal { aspect-ratio: 1 / 1; }
+      .galeria-info { padding: 20px; }
       .footer-grilla { grid-template-columns: 1fr 1fr; }
       .footer-grilla > div:first-child { grid-column: 1 / -1; }
     }
@@ -444,9 +504,8 @@
           </div>
         </div>
         <div class="hero-visual revelar" style="--retraso: 0.2s" aria-hidden="true">
-          <!-- Reemplazar el contenido de estos bloques por <img> cuando estén las fotos -->
-          <div class="bloque bloque-1">NOVA</div>
-          <div class="bloque bloque-2">.EA</div>
+          <div class="bloque bloque-1"><img src="img/vestidos/vestido-leopardo-1.jpg" alt="" /></div>
+          <div class="bloque bloque-2"><img src="img/buzos/buzo-rayas-con-estrellas-1.jpg" alt="" /></div>
         </div>
       </div>
     </section>
@@ -522,6 +581,24 @@
     </div>
   </footer>
 
+  <!-- Galería de fotos de un producto (se completa con JavaScript) -->
+  <div class="galeria" id="galeria" role="dialog" aria-modal="true" aria-labelledby="galeria-titulo" aria-hidden="true">
+    <div class="galeria-caja">
+      <button class="galeria-cerrar" id="galeria-cerrar" aria-label="Cerrar galería">×</button>
+      <div class="galeria-principal">
+        <img id="galeria-imagen" src="" alt="" />
+        <button class="galeria-flecha anterior" id="galeria-anterior" aria-label="Foto anterior">‹</button>
+        <button class="galeria-flecha siguiente" id="galeria-siguiente" aria-label="Foto siguiente">›</button>
+      </div>
+      <div class="galeria-info">
+        <h3 id="galeria-titulo"></h3>
+        <span class="precio" id="galeria-precio"></span>
+        <div class="galeria-miniaturas" id="galeria-miniaturas"></div>
+        <button class="btn-agregar" id="galeria-agregar">Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Aviso flotante y botón para volver arriba -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <button class="btn-arriba" id="btn-arriba" aria-label="Volver arriba">
@@ -534,101 +611,179 @@
     /* =========================================================
        DATOS DE LA TIENDA
        ---------------------------------------------------------
-       Para agregar fotos: completá el campo "imagen" con la ruta
-       del archivo (por ejemplo: "img/pantalones/jean-recto.jpg").
-       - "portada" es la foto de la tarjeta de categoría.
-       - "imagen" en cada producto es la foto de ese producto.
-       Si el campo está vacío se muestra un fondo de color.
+       Cada producto tiene:
+       - nombre y precio (en pesos, sin puntos)
+       - insignia opcional ('Nuevo', 'Top')
+       - imagenes: lista de fotos (la primera es la principal;
+         las demás son otros ángulos y se ven en la galería).
+       Las fotos están en la carpeta img/<sección>/.
+       La foto de cada categoría es la del primer producto.
        ========================================================= */
     const CATEGORIAS = [
       {
-        id: 'pantalones', nombre: 'Pantalones', descripcion: 'Jeans, joggers y cortes clásicos para todos los días.',
-        color: ['#7d8ea3', '#5d6f86'], portada: '',
+        id: 'pantalones', nombre: 'Pantalones', descripcion: 'Shorts y pantalones para todos los días.',
+        color: ['#7d8ea3', '#5d6f86'],
         productos: [
-          { nombre: 'Jean recto clásico', precio: 32900, imagen: '', insignia: 'Nuevo' },
-          { nombre: 'Jogger de algodón', precio: 24500, imagen: '' },
-          { nombre: 'Pantalón cargo', precio: 29900, imagen: '' },
-          { nombre: 'Pantalón de vestir', precio: 35900, imagen: '' }
+          { nombre: 'Short pollera con cinturón', precio: 24900,
+            imagenes: ['img/pantalones/short-pollera-con-cinturon-1.jpg'] }
         ]
       },
       {
-        id: 'remeras', nombre: 'Remeras', descripcion: 'Básicas, estampadas y oversize en algodón suave.',
-        color: ['#e0b48f', '#c99068'], portada: '',
+        id: 'remeras', nombre: 'Remeras', descripcion: 'Remeras, musculosas y tops para combinar con todo.',
+        color: ['#e0b48f', '#c99068'],
         productos: [
-          { nombre: 'Remera básica', precio: 12900, imagen: '' },
-          { nombre: 'Remera oversize', precio: 15900, imagen: '', insignia: 'Top' },
-          { nombre: 'Remera estampada', precio: 14500, imagen: '' },
-          { nombre: 'Musculosa rib', precio: 11900, imagen: '' }
+          { nombre: 'Remera negra básica', precio: 12900,
+            imagenes: ['img/remeras/remera-negra-basica-1.jpg'] },
+          { nombre: 'Saquito tejido con botones', precio: 27900, insignia: 'Nuevo',
+            imagenes: ['img/remeras/saquito-tejido-con-botones-1.jpg'] },
+          { nombre: 'Musculosa blanca', precio: 10900,
+            imagenes: ['img/remeras/musculosa-blanca-1.jpg'] },
+          { nombre: 'Top blanco espalda cruzada', precio: 14900,
+            imagenes: ['img/remeras/top-blanco-espalda-cruzada-1.jpg', 'img/remeras/top-blanco-espalda-cruzada-2.jpg'] }
         ]
       },
       {
-        id: 'buzos', nombre: 'Buzos', descripcion: 'Abrigados y cómodos, con y sin capucha.',
-        color: ['#a9b7a2', '#8a9a83'], portada: '',
+        id: 'buzos', nombre: 'Buzos', descripcion: 'Buzos, cárdigans y sweaters para los días frescos.',
+        color: ['#a9b7a2', '#8a9a83'],
         productos: [
-          { nombre: 'Buzo con capucha', precio: 34900, imagen: '', insignia: 'Nuevo' },
-          { nombre: 'Buzo cuello redondo', precio: 29900, imagen: '' },
-          { nombre: 'Buzo media cremallera', precio: 36500, imagen: '' },
-          { nombre: 'Buzo oversize', precio: 33900, imagen: '' }
+          { nombre: 'Buzo rayas con estrellas', precio: 29900, insignia: 'Top',
+            imagenes: ['img/buzos/buzo-rayas-con-estrellas-1.jpg', 'img/buzos/buzo-rayas-con-estrellas-2.jpg'] },
+          { nombre: 'Buzo gris con capucha', precio: 34900, insignia: 'Nuevo',
+            imagenes: ['img/buzos/buzo-gris-con-capucha-1.jpg', 'img/buzos/buzo-gris-con-capucha-2.jpg'] },
+          { nombre: 'Buzo negro estampado', precio: 28900,
+            imagenes: ['img/buzos/buzo-negro-estampado-1.jpg'] },
+          { nombre: 'Cárdigan beige', precio: 31900,
+            imagenes: ['img/buzos/cardigan-beige-1.jpg'] },
+          { nombre: 'Sweater verde acanalado', precio: 27500,
+            imagenes: ['img/buzos/sweater-verde-acanalado-1.jpg'] }
         ]
       },
       {
-        id: 'camperas', nombre: 'Camperas', descripcion: 'Para el frío, la lluvia o la media estación.',
-        color: ['#8c7b6b', '#6b5d50'], portada: '',
+        id: 'camperas', nombre: 'Camperas', descripcion: 'Camperas bomber con estampados que se destacan.',
+        color: ['#8c7b6b', '#6b5d50'],
         productos: [
-          { nombre: 'Campera puffer', precio: 64900, imagen: '', insignia: 'Top' },
-          { nombre: 'Campera de jean', precio: 49900, imagen: '' },
-          { nombre: 'Rompevientos', precio: 42500, imagen: '' },
-          { nombre: 'Campera de cuero eco', precio: 69900, imagen: '' }
+          { nombre: 'Campera bomber leopardo', precio: 49900, insignia: 'Top',
+            imagenes: ['img/camperas/campera-bomber-leopardo-1.jpg', 'img/camperas/campera-bomber-leopardo-2.jpg'] },
+          { nombre: 'Campera bomber blanca y negra', precio: 49900, insignia: 'Nuevo',
+            imagenes: ['img/camperas/campera-bomber-blanca-y-negra-1.jpg'] }
         ]
       },
       {
         id: 'deporte', nombre: 'Ropa de deporte', descripcion: 'Prendas livianas y respirables para entrenar con comodidad.',
-        color: ['#6fa3a0', '#4f8582'], portada: '',
+        color: ['#6fa3a0', '#4f8582'],
         productos: [
-          { nombre: 'Calza deportiva', precio: 22900, imagen: '', insignia: 'Nuevo' },
-          { nombre: 'Remera dry-fit', precio: 16900, imagen: '' },
-          { nombre: 'Short de running', precio: 15500, imagen: '' },
-          { nombre: 'Campera deportiva', precio: 44900, imagen: '', insignia: 'Top' }
+          { nombre: 'Short tie-dye azul', precio: 19900, insignia: 'Top',
+            imagenes: ['img/deporte/short-tie-dye-azul-1.jpg', 'img/deporte/short-tie-dye-azul-2.jpg'] },
+          { nombre: 'Short tie-dye gris', precio: 19900,
+            imagenes: ['img/deporte/short-tie-dye-gris-1.jpg', 'img/deporte/short-tie-dye-gris-2.jpg'] },
+          { nombre: 'Short 2 en 1 gris', precio: 21900,
+            imagenes: ['img/deporte/short-2-en-1-gris-1.jpg', 'img/deporte/short-2-en-1-gris-2.jpg'] },
+          { nombre: 'Short sin costuras gris', precio: 17900,
+            imagenes: ['img/deporte/short-sin-costuras-gris-1.jpg'] },
+          { nombre: 'Short azul con bolsillos', precio: 21500,
+            imagenes: ['img/deporte/short-azul-con-bolsillos-1.jpg', 'img/deporte/short-azul-con-bolsillos-2.jpg'] },
+          { nombre: 'Short negro Sport', precio: 19500,
+            imagenes: ['img/deporte/short-negro-sport-1.jpg', 'img/deporte/short-negro-sport-2.jpg'] },
+          { nombre: 'Short GYM', precio: 17900,
+            imagenes: ['img/deporte/short-gym-1.jpg'] },
+          { nombre: 'Musculosa deportiva gris', precio: 16900, insignia: 'Nuevo',
+            imagenes: ['img/deporte/musculosa-deportiva-gris-1.jpg', 'img/deporte/musculosa-deportiva-gris-2.jpg'] },
+          { nombre: 'Top deportivo blanco', precio: 15900,
+            imagenes: ['img/deporte/top-deportivo-blanco-1.jpg', 'img/deporte/top-deportivo-blanco-2.jpg'] },
+          { nombre: 'Campera deportiva negra', precio: 42900,
+            imagenes: ['img/deporte/campera-deportiva-negra-1.jpg'] },
+          { nombre: 'Guantes de ciclismo', precio: 18900,
+            imagenes: ['img/deporte/guantes-de-ciclismo-1.jpg'] },
+          { nombre: 'Medias antideslizantes y polainas', precio: 13900,
+            imagenes: ['img/deporte/medias-antideslizantes-y-polainas-1.jpg'] }
         ]
       },
       {
-        id: 'ninos', nombre: 'Ropa de niño', descripcion: 'Prendas resistentes y divertidas para los más chicos.',
-        color: ['#e6c27a', '#d4a64e'], portada: '',
+        id: 'ninos', nombre: 'Ropa de niño', descripcion: 'Detalles tiernos para los más chicos.',
+        color: ['#e6c27a', '#d4a64e'],
         productos: [
-          { nombre: 'Conjunto deportivo', precio: 27900, imagen: '', insignia: 'Nuevo' },
-          { nombre: 'Remera infantil', precio: 9900, imagen: '' },
-          { nombre: 'Jean infantil', precio: 19900, imagen: '' },
-          { nombre: 'Buzo infantil', precio: 21500, imagen: '' }
+          { nombre: 'Medias caladas con moño', precio: 9900, insignia: 'Nuevo',
+            imagenes: ['img/ninos/medias-caladas-con-mono-1.jpg', 'img/ninos/medias-caladas-con-mono-2.jpg', 'img/ninos/medias-caladas-con-mono-3.jpg'] }
         ]
       },
       {
-        id: 'accesorios', nombre: 'Accesorios', descripcion: 'El detalle que completa tu look.',
-        color: ['#c2714f', '#a35a3b'], portada: '',
+        id: 'accesorios', nombre: 'Accesorios', descripcion: 'Carteras, medias y el detalle que completa tu look.',
+        color: ['#c2714f', '#a35a3b'],
         productos: [
-          { nombre: 'Gorra bordada', precio: 11900, imagen: '' },
-          { nombre: 'Bufanda tejida', precio: 13900, imagen: '' },
-          { nombre: 'Tote bag', precio: 9500, imagen: '', insignia: 'Top' },
-          { nombre: 'Cinturón de cuero', precio: 15900, imagen: '' }
+          { nombre: 'Cartera de peluche animal print', precio: 23900, insignia: 'Top',
+            imagenes: ['img/accesorios/cartera-de-peluche-animal-print-1.jpg'] },
+          { nombre: 'Cartera azul de hombro', precio: 21900,
+            imagenes: ['img/accesorios/cartera-azul-de-hombro-1.jpg', 'img/accesorios/cartera-azul-de-hombro-2.jpg', 'img/accesorios/cartera-azul-de-hombro-3.jpg'] },
+          { nombre: 'Cartera de jean con estrellas', precio: 24900, insignia: 'Nuevo',
+            imagenes: ['img/accesorios/cartera-de-jean-con-estrellas-1.jpg'] },
+          { nombre: 'Riñonera azul', precio: 17900,
+            imagenes: ['img/accesorios/rinonera-azul-1.jpg', 'img/accesorios/rinonera-azul-2.jpg'] },
+          { nombre: 'Mochila negra matelassé', precio: 36900,
+            imagenes: ['img/accesorios/mochila-negra-matelasse-1.jpg'] },
+          { nombre: 'Billetera matelassé', precio: 15900,
+            imagenes: ['img/accesorios/billetera-matelasse-1.jpg', 'img/accesorios/billetera-matelasse-2.jpg'] },
+          { nombre: 'Bolso cuadrillé', precio: 22900,
+            imagenes: ['img/accesorios/bolso-cuadrille-1.jpg'] },
+          { nombre: 'Organizador de viaje', precio: 14900,
+            imagenes: ['img/accesorios/organizador-de-viaje-1.jpg', 'img/accesorios/organizador-de-viaje-2.jpg', 'img/accesorios/organizador-de-viaje-3.jpg'] },
+          { nombre: 'Pañuelo estampado', precio: 9900,
+            imagenes: ['img/accesorios/panuelo-estampado-1.jpg', 'img/accesorios/panuelo-estampado-2.jpg', 'img/accesorios/panuelo-estampado-3.jpg'] },
+          { nombre: 'Antifaz para dormir', precio: 5900,
+            imagenes: ['img/accesorios/antifaz-para-dormir-1.jpg'] },
+          { nombre: 'Chatitas con perlas', precio: 32900,
+            imagenes: ['img/accesorios/chatitas-con-perlas-1.jpg'] },
+          { nombre: 'Pack medias rayadas x3', precio: 8900,
+            imagenes: ['img/accesorios/pack-medias-rayadas-x3-1.jpg'] },
+          { nombre: 'Pack soquetes estampados', precio: 9900,
+            imagenes: ['img/accesorios/pack-soquetes-estampados-1.jpg'] },
+          { nombre: 'Medias de algodón', precio: 4500,
+            imagenes: ['img/accesorios/medias-de-algodon-1.jpg'] },
+          { nombre: 'Pack medias transparentes x5', precio: 11900,
+            imagenes: ['img/accesorios/pack-medias-transparentes-x5-1.jpg', 'img/accesorios/pack-medias-transparentes-x5-2.jpg'] }
         ]
       },
       {
         id: 'pijamas', nombre: 'Pijamas', descripcion: 'Suaves y livianos para descansar mejor.',
-        color: ['#b6a6c9', '#9584ad'], portada: '',
+        color: ['#b6a6c9', '#9584ad'],
         productos: [
-          { nombre: 'Pijama de algodón', precio: 26900, imagen: '' },
-          { nombre: 'Pijama polar', precio: 31900, imagen: '', insignia: 'Nuevo' },
-          { nombre: 'Short de dormir', precio: 12500, imagen: '' },
-          { nombre: 'Bata de toalla', precio: 34900, imagen: '' }
+          { nombre: 'Pijama Love negro', precio: 29900, insignia: 'Top',
+            imagenes: ['img/pijamas/pijama-love-negro-1.jpg', 'img/pijamas/pijama-love-negro-2.jpg'] },
+          { nombre: 'Pijama estampado vaca', precio: 31900, insignia: 'Nuevo',
+            imagenes: ['img/pijamas/pijama-estampado-vaca-1.jpg', 'img/pijamas/pijama-estampado-vaca-2.jpg'] },
+          { nombre: 'Pijama de satén con encaje', precio: 27900,
+            imagenes: ['img/pijamas/pijama-de-saten-con-encaje-1.jpg'] }
         ]
       },
       {
         id: 'vestidos', nombre: 'Vestidos', descripcion: 'Desde lo casual hasta lo especial.',
-        color: ['#d99a9a', '#bf7a7a'], portada: '',
+        color: ['#d99a9a', '#bf7a7a'],
         productos: [
-          { nombre: 'Vestido midi', precio: 39900, imagen: '', insignia: 'Top' },
-          { nombre: 'Vestido camisero', precio: 36900, imagen: '' },
-          { nombre: 'Vestido de lino', precio: 42900, imagen: '' },
-          { nombre: 'Vestido largo', precio: 45900, imagen: '' }
+          { nombre: 'Vestido gris con capucha', precio: 38900, insignia: 'Nuevo',
+            imagenes: ['img/vestidos/vestido-gris-con-capucha-1.jpg', 'img/vestidos/vestido-gris-con-capucha-2.jpg'] },
+          { nombre: 'Vestido leopardo', precio: 36900, insignia: 'Top',
+            imagenes: ['img/vestidos/vestido-leopardo-1.jpg'] },
+          { nombre: 'Vestido negro fruncido', precio: 33900,
+            imagenes: ['img/vestidos/vestido-negro-fruncido-1.jpg'] }
+        ]
+      },
+      {
+        id: 'ropa-interior', nombre: 'Ropa interior', descripcion: 'Ropa interior cómoda, mallas y prendas moldeadoras.',
+        color: ['#c9a3a0', '#ad8580'],
+        productos: [
+          { nombre: 'Pack bombachas con puntilla x4', precio: 14900, insignia: 'Top',
+            imagenes: ['img/ropa-interior/pack-bombachas-con-puntilla-x4-1.jpg', 'img/ropa-interior/pack-bombachas-con-puntilla-x4-2.jpg', 'img/ropa-interior/pack-bombachas-con-puntilla-x4-3.jpg', 'img/ropa-interior/pack-bombachas-con-puntilla-x4-4.jpg'] },
+          { nombre: 'Pack bombachas sin costura x5', precio: 15900,
+            imagenes: ['img/ropa-interior/pack-bombachas-sin-costura-x5-1.jpg'] },
+          { nombre: 'Pack tangas de algodón x6', precio: 14500,
+            imagenes: ['img/ropa-interior/pack-tangas-de-algodon-x6-1.jpg', 'img/ropa-interior/pack-tangas-de-algodon-x6-2.jpg'] },
+          { nombre: 'Pack tangas de tiras x2', precio: 8900,
+            imagenes: ['img/ropa-interior/pack-tangas-de-tiras-x2-1.jpg'] },
+          { nombre: 'Corpiño con push-up', precio: 16900, insignia: 'Nuevo',
+            imagenes: ['img/ropa-interior/corpino-con-push-up-1.jpg'] },
+          { nombre: 'Body moldeador', precio: 19900,
+            imagenes: ['img/ropa-interior/body-moldeador-1.jpg', 'img/ropa-interior/body-moldeador-2.jpg'] },
+          { nombre: 'Malla enteriza floral', precio: 26900,
+            imagenes: ['img/ropa-interior/malla-enteriza-floral-1.jpg'] }
         ]
       }
     ];
@@ -648,10 +803,17 @@
         <path d="M12 7a2 2 0 1 1 2-2" /><path d="M12 7v2L3 16h18l-9-7" />
       </svg>`;
 
-    // Devuelve una <img> si hay foto, o un fondo de color si todavía no hay
-    function crearImagen(src, alt, colores) {
-      if (src) {
-        return `<img src="${src}" alt="${alt}" loading="lazy" />`;
+    // Devuelve la foto principal (y la segunda, que aparece al pasar el mouse).
+    // Si el producto todavía no tiene fotos, muestra un fondo de color.
+    function crearImagen(imagenes, alt, colores) {
+      if (imagenes.length) {
+        const alternativa = imagenes[1]
+          ? `<img class="img-alternativa" src="${imagenes[1]}" alt="" loading="lazy" />`
+          : '';
+        const cantidad = imagenes.length > 1
+          ? `<span class="cantidad-fotos">${imagenes.length} fotos</span>`
+          : '';
+        return `<img src="${imagenes[0]}" alt="${alt}" loading="lazy" />${alternativa}${cantidad}`;
       }
       return `
         <div class="placeholder" style="background: linear-gradient(160deg, ${colores[0]}, ${colores[1]})">
@@ -675,13 +837,16 @@
     // 2. Tarjetas de la grilla de categorías
     function renderizarCategorias() {
       document.getElementById('grilla-categorias').innerHTML = CATEGORIAS.map((cat, i) => {
-        const fondo = cat.portada
-          ? `background-image: url('${cat.portada}')`
+        // La foto de la categoría es la del primer producto
+        const portada = cat.productos[0]?.imagenes[0];
+        const fondo = portada
+          ? `background-image: url('${portada}')`
           : `background: linear-gradient(160deg, ${cat.color[0]}, ${cat.color[1]})`;
+        const cantidad = cat.productos.length;
         return `
-          <a href="#${cat.id}" class="tarjeta-categoria revelar" style="--retraso: ${(i % 3) * 0.08}s">
+          <a href="#${cat.id}" class="tarjeta-categoria revelar" style="--retraso: ${(i % 5) * 0.06}s">
             <div class="fondo" style="${fondo}"></div>
-            <h3>${cat.nombre}<small>${cat.productos.length} productos</small></h3>
+            <h3>${cat.nombre}<small>${cantidad} ${cantidad === 1 ? 'producto' : 'productos'}</small></h3>
           </a>`;
       }).join('');
     }
@@ -700,11 +865,12 @@
             </div>
             <div class="grilla-productos">
               ${cat.productos.map((prod, i) => `
-                <article class="producto revelar" style="--retraso: ${i * 0.08}s">
-                  <div class="producto-imagen">
+                <article class="producto revelar" style="--retraso: ${(i % 4) * 0.08}s">
+                  <button class="producto-imagen" data-categoria="${cat.id}" data-indice="${i}"
+                          aria-label="Ver fotos de ${prod.nombre}">
                     ${prod.insignia ? `<span class="insignia">${prod.insignia}</span>` : ''}
-                    ${crearImagen(prod.imagen, prod.nombre, cat.color)}
-                  </div>
+                    ${crearImagen(prod.imagenes, prod.nombre, cat.color)}
+                  </button>
                   <div class="producto-info">
                     <h3>${prod.nombre}</h3>
                     <span class="precio">${formatoPrecio.format(prod.precio)}</span>
@@ -759,7 +925,8 @@
       const contador = document.getElementById('contador-carrito');
 
       // Delegación de eventos: un solo listener para todos los botones "Agregar"
-      document.getElementById('secciones-productos').addEventListener('click', e => {
+      // Delegación en todo el documento: sirve para las tarjetas y para la galería
+      document.addEventListener('click', e => {
         const boton = e.target.closest('.btn-agregar');
         if (!boton) return;
 
@@ -787,6 +954,85 @@
         mostrarToast(cantidad === 0
           ? 'Tu carrito está vacío'
           : `Tenés ${cantidad} ${cantidad === 1 ? 'producto' : 'productos'} en el carrito`);
+      });
+    }
+
+    // Galería: muestra todas las fotos de un producto
+    function iniciarGaleria() {
+      const galeria = document.getElementById('galeria');
+      const imagen = document.getElementById('galeria-imagen');
+      const miniaturas = document.getElementById('galeria-miniaturas');
+      const flechas = [document.getElementById('galeria-anterior'), document.getElementById('galeria-siguiente')];
+      let fotos = [];
+      let actual = 0;
+      let ultimoFoco = null;
+
+      const mostrarFoto = n => {
+        actual = (n + fotos.length) % fotos.length; // da la vuelta al llegar al final
+        imagen.src = fotos[actual];
+        miniaturas.querySelectorAll('button').forEach((b, i) => b.classList.toggle('activa', i === actual));
+      };
+
+      const abrir = producto => {
+        fotos = producto.imagenes;
+        document.getElementById('galeria-titulo').textContent = producto.nombre;
+        document.getElementById('galeria-precio').textContent = formatoPrecio.format(producto.precio);
+        document.getElementById('galeria-agregar').dataset.nombre = producto.nombre;
+        imagen.alt = producto.nombre;
+        miniaturas.innerHTML = fotos.length > 1
+          ? fotos.map((f, i) => `<button data-foto="${i}" aria-label="Foto ${i + 1}"><img src="${f}" alt="" /></button>`).join('')
+          : '';
+        flechas.forEach(f => { f.hidden = fotos.length < 2; });
+        mostrarFoto(0);
+        ultimoFoco = document.activeElement;
+        galeria.classList.add('abierta');
+        galeria.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('sin-scroll');
+        document.getElementById('galeria-cerrar').focus();
+      };
+
+      const cerrar = () => {
+        if (!galeria.classList.contains('abierta')) return;
+        galeria.classList.remove('abierta');
+        galeria.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('sin-scroll');
+        if (ultimoFoco) ultimoFoco.focus();
+      };
+
+      // Abrir al tocar la foto de un producto
+      document.getElementById('secciones-productos').addEventListener('click', e => {
+        const tarjeta = e.target.closest('.producto-imagen');
+        if (!tarjeta) return;
+        const categoria = CATEGORIAS.find(c => c.id === tarjeta.dataset.categoria);
+        const producto = categoria.productos[Number(tarjeta.dataset.indice)];
+        if (producto.imagenes.length) abrir(producto);
+      });
+
+      miniaturas.addEventListener('click', e => {
+        const boton = e.target.closest('button');
+        if (boton) mostrarFoto(Number(boton.dataset.foto));
+      });
+      flechas[0].addEventListener('click', () => mostrarFoto(actual - 1));
+      flechas[1].addEventListener('click', () => mostrarFoto(actual + 1));
+      document.getElementById('galeria-cerrar').addEventListener('click', cerrar);
+      // Cerrar al tocar fuera de la caja
+      galeria.addEventListener('click', e => { if (e.target === galeria) cerrar(); });
+
+      document.addEventListener('keydown', e => {
+        if (!galeria.classList.contains('abierta')) return;
+        if (e.key === 'Escape') cerrar();
+        if (e.key === 'ArrowLeft') mostrarFoto(actual - 1);
+        if (e.key === 'ArrowRight') mostrarFoto(actual + 1);
+      });
+
+      // Deslizar con el dedo en el celular
+      let inicioX = null;
+      imagen.addEventListener('touchstart', e => { inicioX = e.touches[0].clientX; }, { passive: true });
+      imagen.addEventListener('touchend', e => {
+        if (inicioX === null || fotos.length < 2) return;
+        const dx = e.changedTouches[0].clientX - inicioX;
+        if (Math.abs(dx) > 40) mostrarFoto(actual + (dx < 0 ? 1 : -1));
+        inicioX = null;
       });
     }
 
@@ -870,6 +1116,7 @@
 
       iniciarMenu();
       iniciarCarrito();
+      iniciarGaleria();
       iniciarAnimacionesScroll();
       iniciarSeccionActiva();
       iniciarEfectosScroll();
