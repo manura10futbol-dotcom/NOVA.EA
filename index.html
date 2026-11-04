@@ -617,11 +617,12 @@
        - imagenes: lista de fotos (la primera es la principal;
          las demás son otros ángulos y se ven en la galería).
        Las fotos están en la carpeta img/<sección>/.
-       La foto de cada categoría es la del primer producto.
+       La foto de cada categoría es 'portada' (o, si no está, la del primer producto).
        ========================================================= */
     const CATEGORIAS = [
       {
         id: 'pantalones', nombre: 'Pantalones', descripcion: 'Shorts y pantalones para todos los días.',
+        portada: 'img/pantalones/jean-ancho-nevado-1.jpg',
         color: ['#7d8ea3', '#5d6f86'],
         productos: [
           { nombre: 'Pantalón jogger negro con cruces', precio: 34900, insignia: 'Nuevo',
@@ -648,6 +649,7 @@
       },
       {
         id: 'remeras', nombre: 'Remeras', descripcion: 'Remeras, musculosas y tops para combinar con todo.',
+        portada: 'img/remeras/remera-kill-bill-1.jpg',
         color: ['#e0b48f', '#c99068'],
         productos: [
           { nombre: 'Remera negra básica', precio: 12900,
@@ -722,6 +724,7 @@
       },
       {
         id: 'buzos', nombre: 'Buzos', descripcion: 'Buzos, cárdigans y sweaters para los días frescos.',
+        portada: 'img/buzos/buzo-beige-con-mariposas-1.jpg',
         color: ['#a9b7a2', '#8a9a83'],
         productos: [
           { nombre: 'Buzo rayas con estrellas', precio: 29900, insignia: 'Top',
@@ -740,6 +743,7 @@
       },
       {
         id: 'camperas', nombre: 'Camperas', descripcion: 'Camperas bomber con estampados que se destacan.',
+        portada: 'img/camperas/chaqueta-de-tweed-corta-1.jpg',
         color: ['#8c7b6b', '#6b5d50'],
         productos: [
           { nombre: 'Campera bomber leopardo', precio: 49900, insignia: 'Top',
@@ -754,6 +758,7 @@
       },
       {
         id: 'deporte', nombre: 'Ropa de deporte', descripcion: 'Prendas livianas y respirables para entrenar con comodidad.',
+        portada: 'img/deporte/musculosa-running-1.jpg',
         color: ['#6fa3a0', '#4f8582'],
         productos: [
           { nombre: 'Short tie-dye azul', precio: 19900, insignia: 'Top',
@@ -794,6 +799,7 @@
       },
       {
         id: 'ninos', nombre: 'Ropa de niño', descripcion: 'Detalles tiernos para los más chicos.',
+        portada: 'img/ninos/vestido-de-princesa-amarillo-1.jpg',
         color: ['#e6c27a', '#d4a64e'],
         productos: [
           { nombre: 'Medias caladas con moño', precio: 9900, insignia: 'Nuevo',
@@ -808,6 +814,7 @@
       },
       {
         id: 'accesorios', nombre: 'Accesorios', descripcion: 'Carteras, medias y el detalle que completa tu look.',
+        portada: 'img/accesorios/gorra-gris-lavada-1.jpg',
         color: ['#c2714f', '#a35a3b'],
         productos: [
           { nombre: 'Cartera de peluche animal print', precio: 23900, insignia: 'Top',
@@ -854,6 +861,7 @@
       },
       {
         id: 'pijamas', nombre: 'Pijamas', descripcion: 'Suaves y livianos para descansar mejor.',
+        portada: 'img/pijamas/pijama-love-negro-3.jpg',
         color: ['#b6a6c9', '#9584ad'],
         productos: [
           { nombre: 'Pijama Love negro', precio: 29900, insignia: 'Top',
@@ -866,6 +874,7 @@
       },
       {
         id: 'vestidos', nombre: 'Vestidos', descripcion: 'Desde lo casual hasta lo especial.',
+        portada: 'img/vestidos/vestido-largo-de-saten-verde-1.jpg',
         color: ['#d99a9a', '#bf7a7a'],
         productos: [
           { nombre: 'Vestido gris con capucha', precio: 38900, insignia: 'Nuevo',
@@ -898,6 +907,7 @@
       },
       {
         id: 'conjuntos', nombre: 'Conjuntos y más', descripcion: 'Conjuntos, polleras y otras prendas para armar tu look.',
+        portada: 'img/conjuntos/conjunto-california-23-1.jpg',
         color: ['#a39b8b', '#857d6e'],
         productos: [
           { nombre: "Conjunto negro con capucha", precio: 49900, insignia: 'Nuevo',
@@ -914,6 +924,7 @@
       },
       {
         id: 'ropa-interior', nombre: 'Ropa interior', descripcion: 'Ropa interior cómoda, mallas y prendas moldeadoras.',
+        portada: 'img/ropa-interior/corse-de-encaje-negro-1.jpg',
         color: ['#c9a3a0', '#ad8580'],
         productos: [
           { nombre: 'Pack bombachas con puntilla x4', precio: 14900, insignia: 'Top',
@@ -990,7 +1001,7 @@
     function renderizarCategorias() {
       document.getElementById('grilla-categorias').innerHTML = CATEGORIAS.map((cat, i) => {
         // La foto de la categoría es la del primer producto
-        const portada = cat.productos[0]?.imagenes[0];
+        const portada = cat.portada || cat.productos[0]?.imagenes[0];
         const fondo = portada
           ? `background-image: url('${portada}')`
           : `background: linear-gradient(160deg, ${cat.color[0]}, ${cat.color[1]})`;
